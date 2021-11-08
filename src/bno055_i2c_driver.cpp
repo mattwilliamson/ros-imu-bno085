@@ -2,6 +2,7 @@
  * Author: Dheera Venkatraman <dheera@dheera.net>
  */
 
+#include <sstream>
 #include "imu_bno055/bno055_i2c_driver.h"
 
 namespace imu_bno055 {
@@ -25,7 +26,10 @@ bool BNO055I2CDriver::reset() {
     while(_i2c_smbus_read_byte_data(file, BNO055_CHIP_ID_ADDR) != BNO055_ID) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         if(i++ > 500) {
-            throw std::runtime_error("chip did not come back online within 5 seconds of reset");
+            auto id_addr = _i2c_smbus_read_byte_data(file, BNO055_CHIP_ID_ADDR);
+            std::stringbuf buf;
+            buf << "chip did not come back online within 5 seconds of reset - advertising addr 0x" << std::hex << id_addr;
+            throw std::runtime_error(buf.str());
             return false;
         }
     }

@@ -17,8 +17,8 @@
 
 #define BNO055_ID 0xA0
 
-#define BNO055_ADDRESS_A 0x28 // default
-#define BNO055_ADDRESS_B 0x29
+#define BNO055_ADDRESS_A 0x4A // default
+#define BNO055_ADDRESS_B 0x4B
 
 #define BNO055_CHIP_ID_ADDR 0x00
 #define BNO055_ACCEL_REV_ID_ADDR 0x01
