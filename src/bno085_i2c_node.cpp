@@ -1,12 +1,12 @@
-/* bno055_i2c_node.cpp
+/* bno085_i2c_node.cpp
  * Author: Dheera Venkatraman <dheera@dheera.net>
  *
- * Instantiates a BNO055I2CDriver class, as well as
+ * Instantiates a BNO085I2CDriver class, as well as
  * a Watchdog that causes this node to die if things aren't
  * working.
  */
 
-#include <imu_bno055/bno055_i2c_driver.h>
+#include <imu_bno085/bno085_i2c_driver.h>
 #include "watchdog/watchdog.h"
 #include <csignal>
 
@@ -22,9 +22,9 @@
 
 #include <memory>
 
-class BNO055I2CNode {
+class BNO085I2CNode {
     public:
-        BNO055I2CNode(int argc, char* argv[]);
+        BNO085I2CNode(int argc, char* argv[]);
         void run();
         bool readAndPublish();
         void stop();
@@ -32,7 +32,7 @@ class BNO055I2CNode {
     private:
         ros::NodeHandle* nh;
         ros::NodeHandle* nh_priv;
-        std::unique_ptr<imu_bno055::BNO055I2CDriver> imu;
+        std::unique_ptr<imu_bno085::BNO085I2CDriver> imu;
 
         std::string param_device;
         int param_address;
@@ -55,8 +55,8 @@ class BNO055I2CNode {
         int seq;
 };
 
-BNO055I2CNode::BNO055I2CNode(int argc, char* argv[]) {
-    ros::init(argc, argv, "bno055_node");
+BNO085I2CNode::BNO085I2CNode(int argc, char* argv[]) {
+    ros::init(argc, argv, "bno085_node");
     nh = new ros::NodeHandle();
     nh_priv = new ros::NodeHandle("~");
 
@@ -67,11 +67,11 @@ BNO055I2CNode::BNO055I2CNode(int argc, char* argv[]) {
     }
 
     nh_priv->param("device", param_device, (std::string)"/dev/i2c-1");
-    nh_priv->param("address", param_address, (int)BNO055_ADDRESS_A);
+    nh_priv->param("address", param_address, (int)BNO085_ADDRESS_A);
     nh_priv->param("frame_id", param_frame_id, (std::string)"imu");
     nh_priv->param("rate", param_rate, (double)100);
  
-    imu = std::make_unique<imu_bno055::BNO055I2CDriver>(param_device, param_address);
+    imu = std::make_unique<imu_bno085::BNO085I2CDriver>(param_device, param_address);
 
     imu->init();
 
@@ -81,14 +81,14 @@ BNO055I2CNode::BNO055I2CNode(int argc, char* argv[]) {
     pub_temp = nh->advertise<sensor_msgs::Temperature>("temp", 1);
     pub_status = nh->advertise<diagnostic_msgs::DiagnosticStatus>("status", 1);
 
-    srv_reset = nh->advertiseService("reset", &BNO055I2CNode::onSrvReset, this);
+    srv_reset = nh->advertiseService("reset", &BNO085I2CNode::onSrvReset, this);
 
     seq = 0;
 
 
     current_status.level = 0;
-    current_status.name = "BNO055 IMU";
-    current_status.hardware_id = "bno055_i2c";
+    current_status.name = "BNO085 IMU";
+    current_status.hardware_id = "bno085_i2c";
 
     diagnostic_msgs::KeyValue calib_stat;
     calib_stat.key = "Calibration status";
@@ -124,7 +124,7 @@ BNO055I2CNode::BNO055I2CNode(int argc, char* argv[]) {
     rate =std::make_unique<ros::Rate>(param_rate);
 }
 
-void BNO055I2CNode::run() {
+void BNO085I2CNode::run() {
     while(ros::ok()) {
         rate->sleep();
         if(readAndPublish()) {
@@ -133,8 +133,8 @@ void BNO055I2CNode::run() {
     }
 }
 
-bool BNO055I2CNode::readAndPublish() {
-    imu_bno055::IMURecord record;
+bool BNO085I2CNode::readAndPublish() {
+    imu_bno085::IMURecord record;
 
     try {
         record = imu->read();
@@ -209,7 +209,7 @@ bool BNO055I2CNode::readAndPublish() {
     return true;
 }
 
-void BNO055I2CNode::stop() {
+void BNO085I2CNode::stop() {
     ROS_INFO("stopping");
     if(pub_data) pub_data.shutdown();
     if(pub_raw) pub_raw.shutdown();
@@ -219,7 +219,7 @@ void BNO055I2CNode::stop() {
     if(srv_reset) srv_reset.shutdown();
 }
 
-bool BNO055I2CNode::onSrvReset(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
+bool BNO085I2CNode::onSrvReset(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res) {
     if(!(imu->reset())) {
         throw std::runtime_error("chip reset failed");
         return false;
@@ -228,7 +228,7 @@ bool BNO055I2CNode::onSrvReset(std_srvs::Trigger::Request &req, std_srvs::Trigge
 }
 
 int main(int argc, char *argv[]) {
-    BNO055I2CNode node(argc, argv);
+    BNO085I2CNode node(argc, argv);
     node.run();
     return 0;
 }
