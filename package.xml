@@ -1,15 +1,18 @@
 <?xml version="1.0"?>
 <package>
   <name>imu_bno085</name>
-  <version>2.0.0</version>
-  <description>I2C driver for a BNO085 IMU. </description>
-  <maintainer email="ben@calc-i.com">bsewell</maintainer>
+  <version>3.0.0</version>
+  <description>ROS 2 I2C driver for a BNO085 IMU. </description>
+  <maintainer email="a.j.blight@leeds.ac.uk">Andy Blight</maintainer>
   <license>MIT</license>
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>rospy</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <run_depend>rospy</run_depend>
-  <run_depend>std_msgs</run_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <!-- Test dependencies. -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <!-- ROS dependencies. -->
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
   <export>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

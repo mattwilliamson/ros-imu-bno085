@@ -1,24 +1,52 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(imu_bno085)
 
-add_compile_options(-std=c++14 -li2c)
+# Default to C++17
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS roscpp sensor_msgs std_msgs diagnostic_msgs)
+# Find dependencies.
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 
-catkin_package(INCLUDE_DIRS include)
+include_directories(include)
 
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-add_executable(bno085_i2c_node src/bno085_i2c_driver.cpp src/bno085_i2c_node.cpp src/watchdog.cpp)
-#add_dependencies(bno085_i2c_node diagnostic_msgs_gencpp)
-
-include_directories(${catkin_INCLUDE_DIRS})
-
-target_link_libraries(bno085_i2c_node ${catkin_LIBRARIES})
-
-install(TARGETS bno085_i2c_node
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# Source files.
+set(SRC_FILES
+  src/bno085_i2c_driver.cpp
+  src/bno085_i2c_node.cpp
+  src/watchdog.cpp
 )
 
+set(PROJECT_EXEC ${PROJECT_NAME}_exec)
+add_executable(${PROJECT_EXEC} ${SRC_FILES})
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(${PROJECT_EXEC} PUBLIC -Wall -Wextra -pedantic)
+endif()
+
+ament_target_dependencies(${PROJECT_EXEC}
+  rclcpp
+  std_msgs
+)
+
+install(TARGETS ${PROJECT_EXEC}
+  # PROJECT_NAME __MUST__ be used here for launch files to work.
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
+if(BUILD_TESTING)
+  # Linting
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()  # BUILD_TESTING
+
+# Installs the package.xml file.
+ament_package()
