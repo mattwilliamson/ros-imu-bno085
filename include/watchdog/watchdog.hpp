@@ -1,6 +1,8 @@
 #ifndef WATCHDOG__WATCHDOG_HPP_
 #define WATCHDOG__WATCHDOG_HPP_
 
+#include <sys/types.h>
+#include <unistd.h>
 #include <thread>
 #include <atomic>
 #include <chrono>
@@ -8,9 +10,7 @@
 #include <mutex>
 #include <iostream>
 #include <functional>
-#include <unistd.h>
 #include <csignal>
-#include <sys/types.h>
 
 namespace watchdog
 {
@@ -19,7 +19,7 @@ class Watchdog
 {
 public:
   Watchdog();
-  Watchdog(std::function<void()> _callback);
+  explicit Watchdog(std::function<void()> _callback);
   ~Watchdog();
   void start(unsigned int _interval);
   void stop();
@@ -36,6 +36,6 @@ private:
   void loop();
 };
 
-}
+}  // namespace watchdog
 
 #endif  // WATCHDOG__WATCHDOG_HPP_

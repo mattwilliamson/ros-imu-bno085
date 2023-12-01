@@ -23,6 +23,9 @@
 
 #include "bno085_i2c_driver.hpp"
 
+#include <memory>
+#include <string>
+
 #include <diagnostic_msgs/msg/diagnostic_status.hpp>
 #include <sensor_msgs/msg/magnetic_field.hpp>
 #include <sensor_msgs/msg/temperature.hpp>

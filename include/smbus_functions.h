@@ -4,8 +4,8 @@
  * shenanigans and make a ROS package that painlessly "just works" I make a local copy of all
  * those functions (which are really just inline functions using ioctl) here. */
 
-#ifndef _smbus_functions_dot_h
-#define _smbus_functions_dot_h
+#ifndef SMBUS_FUNCTIONS_H_
+#define SMBUS_FUNCTIONS_H_
 
 #include <linux/types.h>
 #include <linux/i2c-dev.h>
@@ -234,4 +234,4 @@ static inline __s32 _i2c_smbus_write_i2c_block_data(
     I2C_SMBUS_I2C_BLOCK_DATA, &data);
 }
 
-#endif // _smbus_functions_dot_h
+#endif  // SMBUS_FUNCTIONS_H_

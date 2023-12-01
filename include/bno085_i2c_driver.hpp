@@ -5,7 +5,6 @@
 #include <linux/i2c-dev.h>
 #include <smbus_functions.h>
 #include <sys/ioctl.h>
-#include <rclcpp/rclcpp.hpp>
 
 #include <chrono>
 #include <cstdlib>
@@ -15,6 +14,8 @@
 #include <iostream>
 #include <string>
 #include <thread>
+
+#include <rclcpp/rclcpp.hpp>
 
 
 #define BNO085_ID 0xA0
