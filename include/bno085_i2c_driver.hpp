@@ -1,19 +1,21 @@
-#ifndef _bno085_i2c_driver_dot_h
-#define _bno085_i2c_driver_dot_h
+#ifndef BNO085_I2C_DRIVER_HPP_
+#define BNO085_I2C_DRIVER_HPP_
 
-#include <ros/ros.h>
+#include <fcntl.h>
+#include <linux/i2c-dev.h>
+#include <smbus_functions.h>
+#include <sys/ioctl.h>
+#include <rclcpp/rclcpp.hpp>
+
+#include <chrono>
 #include <cstdlib>
 #include <cerrno>
 #include <cstring>
 #include <stdexcept>
-#include <sys/ioctl.h>
-#include <fcntl.h>
 #include <iostream>
-#include <chrono>
+#include <string>
 #include <thread>
 
-#include <linux/i2c-dev.h>
-#include <smbus_functions.h>
 
 #define BNO085_ID 0xA0
 
@@ -190,11 +192,10 @@
 #define DIAG_SYS_STAT 4
 #define DIAG_SYS_ERR 5
 
-namespace imu_bno085 {
-
 // order of this struct is designed to match the I2C registers
 // so all data can be read in one fell swoop
-typedef struct {
+typedef struct
+{
   int16_t raw_linear_acceleration_x;
   int16_t raw_linear_acceleration_y;
   int16_t raw_linear_acceleration_z;
@@ -224,25 +225,23 @@ typedef struct {
   uint8_t system_clock_status;
   uint8_t system_status;
   uint8_t system_error_code;
-} IMURecord;
+} BNO085I2CIMURecord;
 
-class BNO085I2CDriver {
-  public:
-    BNO085I2CDriver(std::string device_, int address_);
-    void init();
-    bool reset();
-    IMURecord read();
+class BNO085I2CDriver
+{
+public:
+  BNO085I2CDriver(std::string device_, int address_);
+  void init();
+  bool reset();
+  BNO085I2CIMURecord read();
 
-  private:
-    
-    // class variables
-    int file;
+private:
+  // class variables
+  int file;
 
-    // parameters
-    std::string device;
-    int address;
+  // parameters
+  std::string device;
+  int address;
 };
 
-}
-
-#endif // _bno085_i2c_driver_dot_h
+#endif  // BNO085_I2C_DRIVER_HPP_

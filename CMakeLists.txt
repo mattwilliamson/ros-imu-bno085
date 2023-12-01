@@ -9,12 +9,16 @@ endif()
 # Find dependencies.
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(diagnostic_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 include_directories(include)
 
 # Source files.
 set(SRC_FILES
+  src/bno085_i2c.cpp
   src/bno085_i2c_driver.cpp
   src/bno085_i2c_node.cpp
   src/watchdog.cpp
@@ -29,7 +33,10 @@ endif()
 
 ament_target_dependencies(${PROJECT_EXEC}
   rclcpp
+  diagnostic_msgs
+  sensor_msgs
   std_msgs
+  std_srvs
 )
 
 install(TARGETS ${PROJECT_EXEC}
