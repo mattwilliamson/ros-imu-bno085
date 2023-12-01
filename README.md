@@ -1,5 +1,12 @@
 # ROS 2 driver for IMU Bosch BNO085 (I2C)
 
+WORK IN PROGRESS.
+
+Builds on ROS2 Humble, Ubunut 22.04LTS.
+
+NOT TESTED!
+
+
 This is a ROS node for the BNO085 IMU that communicates via I2C and without any dependencies besides libi2c-dev. It does **not** require RTIMULib, RTIMULib2, RTIMULib3 or whatever the latest sequel is. It is specifically targeted at using a BNO085 with NVIDIA boards such as the TX1, TX2, and Xavier, or any other board that has native I2C.  Also tested on Raspberry Pi 4.
 
 The BNO085 supports I2C and UART communication. This driver supports I2C only. If you are looking for a UART driver, see [this driver](https://github.com/mdrwiega/bosch_imu_driver) by [mdrwiega](https://github.com/mdrwiega) instead.
