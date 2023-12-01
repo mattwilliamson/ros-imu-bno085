@@ -68,4 +68,4 @@ void Watchdog::loop()
   }
 }
 
-}
+}  // namespace watchdog

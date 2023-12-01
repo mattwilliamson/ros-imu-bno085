@@ -1,5 +1,5 @@
-#ifndef _watchdog_dot_h
-#define _watchdog_dot_h
+#ifndef WATCHDOG__WATCHDOG_HPP_
+#define WATCHDOG__WATCHDOG_HPP_
 
 #include <thread>
 #include <atomic>
@@ -38,4 +38,4 @@ private:
 
 }
 
-#endif /* _watchdog_dot_h */
+#endif  // WATCHDOG__WATCHDOG_HPP_

@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef IMU_BNO085_BNO085_I2C_NODE_HPP
-#define IMU_BNO085_BNO085_I2C_NODE_HPP
+#ifndef BNO085_I2C_NODE_HPP_
+#define BNO085_I2C_NODE_HPP_
 
 #include "bno085_i2c_driver.hpp"
 
@@ -71,4 +71,4 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 };
 
-#endif  // IMU_BNO085_BNO085_I2C_NODE_HPP
+#endif  // BNO085_I2C_NODE_HPP_

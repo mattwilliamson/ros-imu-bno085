@@ -3,7 +3,11 @@
  */
 
 #include <sstream>
+#include <stdexcept>
+#include <string>
+#include <thread>
 #include "bno085_i2c_driver.hpp"
+
 
 BNO085I2CDriver::BNO085I2CDriver(std::string device_, int address_)
 {
@@ -27,7 +31,7 @@ bool BNO085I2CDriver::reset()
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
     if (i++ > 500) {
       auto id_addr = _i2c_smbus_read_byte_data(file, BNO085_CHIP_ID_ADDR);
-      std::stringbuf buf;
+      std::stringstream buf;
       buf << "chip did not come back online within 5 seconds of reset - advertising addr 0x" <<
         std::hex << id_addr;
       throw std::runtime_error(buf.str());
@@ -52,7 +56,6 @@ bool BNO085I2CDriver::reset()
 
 void BNO085I2CDriver::init()
 {
-
   file = open(device.c_str(), O_RDWR);
 
   if (ioctl(file, I2C_SLAVE, address) < 0) {
@@ -80,7 +83,8 @@ BNO085I2CIMURecord BNO085I2CDriver::read()
   BNO085I2CIMURecord record;
 
   // can only read a length of 0x20 at a time, so do it in 2 reads
-  // BNO085_LINEAR_ACCEL_DATA_X_LSB_ADDR is the start of the data block that aligns with the IMURecord struct
+  // BNO085_LINEAR_ACCEL_DATA_X_LSB_ADDR is the start of the data block
+  // that aligns with the IMURecord struct.
   if (_i2c_smbus_read_i2c_block_data(
       file, BNO085_ACCEL_DATA_X_LSB_ADDR, 0x20,
       (uint8_t *)&record) != 0x20)
