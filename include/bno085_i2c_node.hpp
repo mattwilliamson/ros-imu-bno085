@@ -57,6 +57,11 @@ private:
   void PublishStatus(const BNO085I2CIMURecord & record);
   void TimerCallback();
 
+  int address;
+  std::string device;
+  std::string frame_id;
+  int64_t rate;
+
   std::unique_ptr<BNO085I2CDriver> imu;
   std::string param_frame_id_;
   diagnostic_msgs::msg::DiagnosticStatus current_status;

@@ -35,22 +35,26 @@ static const char * kStatusTopicName = "status";
 BNO085I2CNode::BNO085I2CNode(const rclcpp::NodeOptions & options)
 : Node(kNodeName, options), publish_status_count_(0)
 {
-  // Read in parameter values.
-  declare_parameter("address", BNO085_ADDRESS_A);
-  int param_address = get_parameter("address").get_parameter_value().get<int>();
-  declare_parameter("device", "/dev/i2c-1");
-  std::string param_device_id =
-    get_parameter("device").get_parameter_value().get<std::string>();
-  declare_parameter("frame_id", "imu");
-  std::string param_frame_id_ =
-    get_parameter("frame_id").get_parameter_value().get<std::string>();
-  declare_parameter("rate", 100.0);
-  int64_t param_rate = get_parameter("rate").get_parameter_value().get<int64_t>();
+  // Declare parameters that may be set on this node
+  this->declare_parameter<int>("address");
+  this->declare_parameter<std::string>("device");
+  this->declare_parameter<std::string>("frame_id");
+  this->declare_parameter<int64_t>("rate");
+
+  // Get parameters from yaml
+  this->get_parameter_or<int>("address", address, BNO085_ADDRESS_A);
+  this->get_parameter_or<std::string>("device", device, "/dev/i2c-1");
+  this->get_parameter_or<std::string>("frame_id", frame_id, "imu");
+  this->get_parameter_or<int64_t>("rate", rate, 100);
+
+  RCLCPP_INFO(get_logger(),
+              "Connecting to BNO08x IMU on i2c bus '%s' on address '%d' (%x)",
+              device.c_str(), address, address);
 
   // Create and initialise driver instance.
   imu = std::make_unique<BNO085I2CDriver>(
-    param_device_id,
-    param_address);
+    device,
+    address);
   imu->init();
 
   // Create publishers.
@@ -63,7 +67,7 @@ BNO085I2CNode::BNO085I2CNode(const rclcpp::NodeOptions & options)
     create_publisher<diagnostic_msgs::msg::DiagnosticStatus>(kStatusTopicName, 10);
 
   // Create timer to publish data.
-  std::chrono::milliseconds param_rate_ms(param_rate);
+  std::chrono::milliseconds param_rate_ms(rate);
   timer_ = create_wall_timer(param_rate_ms, std::bind(&BNO085I2CNode::TimerCallback, this));
 
   InitDiagnosticMsg();

@@ -1,0 +1,15 @@
+<launch>
+    <!-- BNO080 75 (0x4b) BNO085 74 (0x4a) -->
+    <arg name="address" default="75"/>
+    <arg name="device" default="/dev/i2c-1"/>
+    <arg name="frame_id" default="imu"/>
+    <arg name="rate" default="100"/>
+    
+
+    <node name="imu_node" pkg="imu_bno085" exec="imu_bno085_exec" respawn="true" respawn_delay="2">
+        <param name="device" value="$(var device)"/>
+        <param name="address" value="$(var address)"/>
+        <param name="frame_id" value="$(var frame_id)"/>
+        <param name="rate" value="$(var rate)"/>
+    </node>
+</launch>
