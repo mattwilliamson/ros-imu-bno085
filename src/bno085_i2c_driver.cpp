@@ -69,12 +69,12 @@ void BNO085I2CDriver::init()
     throw std::runtime_error("i2c device open failed");
   }
   
-  // auto chip_id = _i2c_smbus_read_byte_data(file, BNO085_CHIP_ID_ADDR);
-  // if (chip_id != BNO085_ID) {
-  //   std::stringstream stream;
-  //   stream << "incorrect chip ID: " << chip_id << " 0x" << std::hex << chip_id;
-  //   throw std::runtime_error(stream.str());
-  // }
+  auto chip_id = _i2c_smbus_read_byte_data(file, BNO085_CHIP_ID_ADDR);
+  if (chip_id != BNO085_ID) {
+    std::stringstream stream;
+    stream << "incorrect chip ID: " << chip_id << " 0x" << std::hex << chip_id;
+    throw std::runtime_error(stream.str());
+  }
 
   std::cerr
     << "rev ids:"
